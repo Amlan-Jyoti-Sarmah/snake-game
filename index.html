@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script defer type="module" src="./app.js"></script>
+    <title>Snake Game</title>
+    <style>
+      .box {
+        width: 10%;
+        padding-top: 10%;
+        border: 0.5px solid #000;
+      }
+      .snake-body,
+      .snake-head {
+        background-color: #212529;
+      }
+      .food {
+        background-color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- nav bar -->
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#"> Snake </a>
+      </div>
+    </nav>
+    <!-- The Game board -->
+    <div class="container-lg mt-5">
+      <div class="row justify-content-center mb-3">
+        <div class="col-5 text-center">
+          <p class="display-4">Snake Game</p>
+          <p class="display-5 text-muted" id="score">Score : 0</p>
+          <p class="text-muted">
+            Use "W","A","S","D" for controlling the snake .
+          </p>
+        </div>
+      </div>
+      <div class="row justify-content-center px-1 mb-3">
+        <div
+          class="col-sm-5 col-12 p-0 d-flex flex-wrap border border-dark"
+          id="board"
+        ></div>
+      </div>
+      <div class="row justify-content-center mb-3">
+        <div class="col-3 text-center">
+          <button class="btn btn-dark" id="start-game">Start Game</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
