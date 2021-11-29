@@ -90,7 +90,6 @@ function main() {
       window.requestAnimationFrame(main);
     }, GAME_SPEED);
   } else {
-    clearCanvas(snakePosition);
     restartGame();
   }
 }
@@ -117,6 +116,12 @@ window.addEventListener("keydown", handleUserInput);
 
 //initializing and stopping the game
 start_btn.addEventListener("click", () => {
+  for (let i = 0; i < 100; i++) {
+    const element = document.getElementById(i.toString()) as HTMLDivElement;
+    if (element.classList.contains("snake-body")) {
+      element.classList.remove("snake-body");
+    }
+  }
   IS_PLAYING = !IS_PLAYING;
   if (IS_PLAYING) {
     start_btn.innerText = "Stop Game";
