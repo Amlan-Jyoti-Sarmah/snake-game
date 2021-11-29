@@ -3,11 +3,14 @@ const BOARD = document.getElementById("board") as HTMLDivElement;
 const BOARD_SIZE = 100;
 const start_btn = document.getElementById("start-game") as HTMLButtonElement;
 let IS_PLAYING = false;
-let snakePosition: number[] = [5, 4, 3, 2, 1];
+let snakePosition: number[] = [3, 2, 1];
 let foodPosition: number;
 let direction = "E";
-let nextHeadPosition = 6;
+let nextHeadPosition = 4;
 const GAME_SPEED = 500; //in milisecond
+let isFoodExist = false;
+let score = 0;
+const SCORE_BOARD = document.getElementById("score") as HTMLParagraphElement;
 
 // rendering the board on screen
 const generateBoard = (boardSize: number) => {
@@ -21,7 +24,6 @@ generateBoard(BOARD_SIZE);
 //calculating game stuff
 function calculateSnakePosition(snakePosition: number[]) {
   let newSnakePosition: number[] = [];
-  console.log(nextHeadPosition);
   for (let i = 0; i < snakePosition.length; i++) {
     if (i == 0) {
       const pos = nextHeadPosition - snakePosition[i];
@@ -31,7 +33,6 @@ function calculateSnakePosition(snakePosition: number[]) {
       newSnakePosition.push(snakePosition[i - 1]);
     }
   }
-  console.log(newSnakePosition);
   return newSnakePosition;
 }
 
@@ -40,51 +41,99 @@ function draw(snakePosition: number[]) {
   for (let i = 0; i < snakePosition.length; i++) {
     const id = snakePosition[i];
     const element = document.getElementById(id.toString()) as HTMLDivElement;
-    element.classList.add("snake-body");
+    if (element) element.classList.add("snake-body");
   }
 }
 function clearCanvas(snakePosition: number[]) {
   for (let i = 0; i < snakePosition.length; i++) {
     const id = snakePosition[i];
     const element = document.getElementById(id.toString()) as HTMLDivElement;
-    element.classList.remove("snake-body");
+    if (element) element.classList.remove("snake-body");
   }
 }
+
+//function to manage food stuff
+function locateFood(snakePosition: number[]) {
+  let foodLocation = 0;
+  let isFound = false;
+  while (!isFound) {
+    const food = Math.floor(Math.random() * 100);
+    for (let i = 0; i < snakePosition.length; i++) {
+      if (food !== snakePosition[i]) {
+        isFound = true;
+        foodLocation = food;
+        break;
+      }
+    }
+  }
+  return foodLocation;
+}
+function displayFood(snakePosition: number[]) {
+  const location = locateFood(snakePosition);
+  const element = document.getElementById(
+    location.toString()
+  ) as HTMLDivElement;
+  element.classList.add("food");
+}
+function eatfood(head: number) {
+  for (let i = 0; i < BOARD_SIZE; i++) {
+    const element = document.getElementById(i.toString()) as HTMLDivElement;
+    if (element.classList.contains("food") && i === head) {
+      element.classList.remove("food");
+      isFoodExist = false;
+      score += 1;
+      SCORE_BOARD.innerText = score.toString();
+      if (snakePosition.length < 7) {
+        const size = snakePosition[1] - snakePosition[0];
+        const add = snakePosition[snakePosition.length - 1] + size;
+        snakePosition.push(add);
+      }
+    }
+  }
+}
+
 //check win
 function checkwin(head: number) {
   const deadPositionsEast = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
   const deadPositionsWest = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
-  const deadPositionsNorth = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const deadPositionsSouth = [90, 91, 92, 93, 94, 95, 96, 97, 98, 99];
   const deadPositions = 10;
+  const element = document.getElementById(head.toString()) as HTMLDivElement;
+  if (!element) {
+    IS_PLAYING = false;
+  }
   for (let i = 0; i < deadPositions; i++) {
-    if (direction === "E" && head === deadPositionsEast[i]) {
+    if (direction === "W" && head === deadPositionsEast[i]) {
       IS_PLAYING = false;
     }
-    if (direction === "W" && head === deadPositionsWest[i]) {
-      IS_PLAYING = false;
-    }
-    if (direction === "N" && head === deadPositionsNorth[i]) {
-      IS_PLAYING = false;
-    }
-    if (direction === "S" && head === deadPositionsSouth[i]) {
+    if (direction === "E" && head === deadPositionsWest[i]) {
       IS_PLAYING = false;
     }
   }
 }
+
 //restart the game
 function restartGame() {
   snakePosition = [3, 2, 1];
   direction = "E";
   nextHeadPosition = 4;
+  score = 0;
+  isFoodExist = false;
+  SCORE_BOARD.innerText = score.toString();
   start_btn.innerText = "Restart Game";
+  start_btn.classList.remove("disabled");
 }
 //main loop
 function main() {
+  checkwin(snakePosition[0]);
+  if (isFoodExist) {
+    eatfood(snakePosition[0]);
+  } else {
+    displayFood(snakePosition);
+    isFoodExist = true;
+  }
   clearCanvas(snakePosition);
   snakePosition = calculateSnakePosition(snakePosition);
   draw(snakePosition);
-  checkwin(snakePosition[0]);
   if (IS_PLAYING) {
     setTimeout(() => {
       window.requestAnimationFrame(main);
@@ -97,7 +146,6 @@ function main() {
 //User input
 function handleUserInput(event: KeyboardEvent) {
   let key = event.key.toUpperCase();
-  console.log(nextHeadPosition);
   if (key === "W" && direction !== "N" && direction !== "S") {
     direction = "N";
     nextHeadPosition = snakePosition[0] - 10;
@@ -121,12 +169,11 @@ start_btn.addEventListener("click", () => {
     if (element.classList.contains("snake-body")) {
       element.classList.remove("snake-body");
     }
+    if (element.classList.contains("food")) {
+      element.classList.remove("food");
+    }
   }
   IS_PLAYING = !IS_PLAYING;
-  if (IS_PLAYING) {
-    start_btn.innerText = "Stop Game";
-  } else {
-    start_btn.innerText = "Start Game";
-  }
+  start_btn.classList.add("disabled");
   window.requestAnimationFrame(main);
 });
