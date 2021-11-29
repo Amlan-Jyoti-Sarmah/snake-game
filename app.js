@@ -49,17 +49,22 @@ function clearCanvas(snakePosition) {
 }
 //check win
 function checkwin(head) {
-    if (head < 0 || head > 99) {
-        IS_PLAYING = false;
-    }
     var deadPositionsEast = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
     var deadPositionsWest = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
+    var deadPositionsNorth = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    var deadPositionsSouth = [90, 91, 92, 93, 94, 95, 96, 97, 98, 99];
     var deadPositions = 10;
     for (var i = 0; i < deadPositions; i++) {
         if (direction === "E" && head === deadPositionsEast[i]) {
             IS_PLAYING = false;
         }
         if (direction === "W" && head === deadPositionsWest[i]) {
+            IS_PLAYING = false;
+        }
+        if (direction === "N" && head === deadPositionsNorth[i]) {
+            IS_PLAYING = false;
+        }
+        if (direction === "S" && head === deadPositionsSouth[i]) {
             IS_PLAYING = false;
         }
     }
