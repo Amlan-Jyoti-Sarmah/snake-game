@@ -21,7 +21,7 @@ const generateBoard = (boardSize: number) => {
 
 generateBoard(BOARD_SIZE);
 
-//calculating game stuff
+//calculating snake position
 function calculateSnakePosition(snakePosition: number[]) {
   let newSnakePosition: number[] = [];
   for (let i = 0; i < snakePosition.length; i++) {
@@ -52,7 +52,7 @@ function clearCanvas(snakePosition: number[]) {
   }
 }
 
-//function to manage food stuff
+//function to manage food location , display and consumption 
 function locateFood(snakePosition: number[]) {
   let foodLocation = 0;
   let isFound = false;
