@@ -34,10 +34,26 @@ function calculateSnakePosition(snakePosition: number[]) {
   return newSnakePosition;
 }
 
+//function to draw the snake and clearing the game canvas
+function draw(snakePosition: number[]) {
+  for (let i = 0; i < snakePosition.length; i++) {
+    const id = snakePosition[i];
+    const element = document.getElementById(id.toString()) as HTMLDivElement;
+    element.classList.add("snake-body");
+  }
+}
+function clearCanvas(snakePosition: number[]) {
+  for (let i = 0; i < snakePosition.length; i++) {
+    const id = snakePosition[i];
+    const element = document.getElementById(id.toString()) as HTMLDivElement;
+    element.classList.remove("snake-body");
+  }
+}
 //main loop
 function main() {
+  clearCanvas(snakePosition);
   snakePosition = calculateSnakePosition(snakePosition);
-  console.log(snakePosition);
+  draw(snakePosition);
   if (IS_PLAYING) {
     window.requestAnimationFrame(main);
   }
