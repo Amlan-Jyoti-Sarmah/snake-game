@@ -50,15 +50,43 @@ function clearCanvas(snakePosition: number[]) {
     element.classList.remove("snake-body");
   }
 }
+//check win
+function checkwin(head: number) {
+  if (head < 0 || head > 99) {
+    IS_PLAYING = false;
+  }
+  const deadPositionsEast = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+  const deadPositionsWest = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
+  const deadPositions = 10;
+  for (let i = 0; i < deadPositions; i++) {
+    if (direction === "E" && head === deadPositionsEast[i]) {
+      IS_PLAYING = false;
+    }
+    if (direction === "W" && head === deadPositionsWest[i]) {
+      IS_PLAYING = false;
+    }
+  }
+}
+//restart the game
+function restartGame() {
+  snakePosition = [3, 2, 1];
+  direction = "E";
+  nextHeadPosition = 4;
+  start_btn.innerText = "Restart Game";
+}
 //main loop
 function main() {
   clearCanvas(snakePosition);
   snakePosition = calculateSnakePosition(snakePosition);
   draw(snakePosition);
+  checkwin(snakePosition[0]);
   if (IS_PLAYING) {
     setTimeout(() => {
       window.requestAnimationFrame(main);
     }, GAME_SPEED);
+  } else {
+    clearCanvas(snakePosition);
+    restartGame();
   }
 }
 
