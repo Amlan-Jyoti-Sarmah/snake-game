@@ -52,7 +52,9 @@ function main() {
     snakePosition = calculateSnakePosition(snakePosition);
     draw(snakePosition);
     if (IS_PLAYING) {
-        window.requestAnimationFrame(main);
+        setTimeout(function () {
+            window.requestAnimationFrame(main);
+        }, 500);
     }
 }
 //initializing and stopping the game
